@@ -1,9 +1,10 @@
-export default function Home() {
+import { Header } from "@/components/header";
+
+export default async function Home() {
+    console.log('HomePage');
   return (
     <div>
-      <h1>
-        Olá Next
-      </h1>
+        <Header />
     </div>
   );
 }
