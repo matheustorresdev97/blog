@@ -8,6 +8,7 @@ export default async function ExemploPage() {
   return (
     <main className='min-h-[600px] text-4xl font-bold'>
       <div>Hora: {hour}</div>
+      
     </main>
   );
 }
