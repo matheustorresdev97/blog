@@ -1,4 +1,5 @@
-import { drizzleDb } from '.';
+{/**
+  * import { drizzleDb } from '.';
 import { postsTable } from './schemas';
 
 (async () => {
@@ -6,3 +7,6 @@ import { postsTable } from './schemas';
 
   console.log(posts);
 })();
+  *
+  * 
+  */}
