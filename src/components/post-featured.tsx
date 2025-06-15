@@ -1,3 +1,4 @@
+import ErrorMessage from "./error-message";
 import { PostCoverImage } from "./post-cover-image";
 import { PostSummary } from "./post-summary";
 
@@ -5,6 +6,14 @@ import { findAllPublicPostsCached } from '@/lib/post/queries/public';
 
 export async function PostFeatured() {
   const posts = await findAllPublicPostsCached();
+
+  if (posts.length <= 0)
+    return (
+      <ErrorMessage
+        contentTitle='Ops 😅'
+        content='Ainda não criamos nenhum post.'
+      />
+    );
 
   const post = posts[0];
 
