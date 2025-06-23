@@ -5,6 +5,9 @@ import { PostCreateSchema } from "@/lib/post/queries/validations";
 import { PostModel } from "@/models/post/post-model";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 
+import { makeSlugFromText } from "@/utils/make-slug-from-text";
+import { v4 as uuidV4 } from 'uuid';
+
 type CreatePostActionState = {
   formState: PublicPost;
   errors: string[];
@@ -37,8 +40,8 @@ export async function createPostAction(
     ...validPostData,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    id: Date.now().toString(),
-    slug: Math.random().toString(36),
+    id: uuidV4(),
+    slug: makeSlugFromText(validPostData.title),
   };
 
   return {
