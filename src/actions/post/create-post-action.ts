@@ -23,6 +23,7 @@ export async function createPostAction(
   prevState: CreatePostActionState,
   formData: FormData
 ): Promise<CreatePostActionState> {
+  
   if (!(formData instanceof FormData)) {
     return {
       formState: prevState.formState,
