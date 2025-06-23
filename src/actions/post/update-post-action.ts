@@ -1,41 +1,43 @@
-'use server'
+"use server";
 
 import {
   makePartialPublicPost,
   makePublicPostFromDb,
   PublicPost,
-} from '@/dto/post/dto';
-import { PostUpdateSchema } from '@/lib/post/queries/validations';
+} from "@/dto/post/dto";
+import { PostUpdateSchema } from "@/lib/post/queries/validations";
 
-import { postRepository } from '@/repositories/post';
-import { getZodErrorMessages } from '@/utils/get-zod-error-messages';
-import { revalidateTag } from 'next/cache';
+import { postRepository } from "@/repositories/post";
+import { asyncDelay } from "@/utils/async-delay";
+import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
+import { makeRandomString } from "@/utils/make-random-string";
+import { revalidateTag } from "next/cache";
 
 type UpdatePostActionState = {
   formState: PublicPost;
   errors: string[];
-  success?: true;
+  success?: string;
 };
 
 export async function updatePostAction(
   prevState: UpdatePostActionState,
-  formData: FormData,
+  formData: FormData
 ): Promise<UpdatePostActionState> {
-  // TODO: verificar se o usuário tá logado
+  await asyncDelay(3000);
 
   if (!(formData instanceof FormData)) {
     return {
       formState: prevState.formState,
-      errors: ['Dados inválidos'],
+      errors: ["Dados inválidos"],
     };
   }
 
-  const id = formData.get('id')?.toString() || '';
+  const id = formData.get("id")?.toString() || "";
 
-  if (!id || typeof id !== 'string') {
+  if (!id || typeof id !== "string") {
     return {
       formState: prevState.formState,
-      errors: ['ID inválido'],
+      errors: ["ID inválido"],
     };
   }
 
@@ -68,16 +70,16 @@ export async function updatePostAction(
 
     return {
       formState: makePartialPublicPost(formDataToObj),
-      errors: ['Erro desconhecido'],
+      errors: ["Erro desconhecido"],
     };
   }
 
-  revalidateTag('posts');
+  revalidateTag("posts");
   revalidateTag(`post-${post.slug}`);
 
   return {
     formState: makePublicPostFromDb(post),
     errors: [],
-    success: true,
+    success: makeRandomString(),
   };
 }
