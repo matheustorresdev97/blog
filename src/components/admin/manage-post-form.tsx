@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "../button";
 import { InputCheckbox } from "../input-checkbox";
 import { InputText } from "../input-text";
 import { MarkdownEditor } from "../markdown-editor";
 import { ImageUploader } from "./image-uploader";
-import { PublicPost } from "@/dto/post/dto";
+import { makePartialPublicPost, PublicPost } from "@/dto/post/dto";
 import { createPostAction } from "@/actions/post/create-post-action";
 
 type ManagePostFormProps = {
@@ -14,91 +14,91 @@ type ManagePostFormProps = {
 };
 
 export function ManagePostForm({ publicPost }: ManagePostFormProps) {
-  const [contentValue, setContentValue] = useState(publicPost?.content || "");
-
   const initialState = {
-    numero: 0,
+    formState: makePartialPublicPost(publicPost),
+    errors: [],
   };
+
   const [state, action, isPending] = useActionState(
     createPostAction,
-    initialState
+    initialState,
   );
 
-  useEffect(() => {
-    console.log(state.numero);
-  }, [state.numero]);
+  const { formState } = state;
+  const [contentValue, setContentValue] = useState(publicPost?.content || '');
 
   return (
-    <form action={action} className="mb-16">
-      <div className="flex flex-col gap-6">
+    <form action={action} className='mb-16'>
+      <div className='flex flex-col gap-6'>
         <InputText
-          labelText="ID"
-          name="id"
-          placeholder="ID gerado automaticamente"
-          type="text"
-          defaultValue={publicPost?.id || ""}
+          labelText='ID'
+          name='id'
+          placeholder='ID gerado automaticamente'
+          type='text'
+          defaultValue={formState.id}
           readOnly
         />
 
         <InputText
-          labelText="Slug"
-          name="slug"
-          placeholder="Slug gerada automaticamente"
-          type="text"
-          defaultValue={publicPost?.slug || ""}
+          labelText='Slug'
+          name='slug'
+          placeholder='Slug gerada automaticamente'
+          type='text'
+          defaultValue={formState.slug}
           readOnly
         />
 
         <InputText
-          labelText="Autor"
-          name="author"
-          placeholder="Digite o nome do autor"
-          type="text"
-          defaultValue={publicPost?.author || ""}
+          labelText='Autor'
+          name='author'
+          placeholder='Digite o nome do autor'
+          type='text'
+          defaultValue={formState.author}
         />
 
         <InputText
-          labelText="Título"
-          name="title"
-          placeholder="Digite o título"
-          type="text"
-          defaultValue={publicPost?.title || ""}
+          labelText='Título'
+          name='title'
+          placeholder='Digite o título'
+          type='text'
+          defaultValue={formState.title}
         />
 
         <InputText
-          labelText="Excerto"
-          name="excerpt"
-          placeholder="Digite o resumo"
-          type="text"
-          defaultValue={publicPost?.excerpt || ""}
+          labelText='Excerto'
+          name='excerpt'
+          placeholder='Digite o resumo'
+          type='text'
+          defaultValue={formState.excerpt}
         />
 
         <MarkdownEditor
-          labelText="Conteúdo"
+          labelText='Conteúdo'
           value={contentValue}
           setValue={setContentValue}
-          textAreaName="content"
+          textAreaName='content'
           disabled={false}
         />
 
         <ImageUploader />
 
         <InputText
-          labelText="URL da imagem de capa"
-          name="coverImageUrl"
-          placeholder="Digite a url da imagem"
-          type="text"
-          defaultValue={publicPost?.coverImageUrl || ""}
-        />
-        <InputCheckbox
-          labelText="Publicar?"
-          name="published"
-          type="checkbox"
-          defaultChecked={publicPost?.published || false}
+          labelText='URL da imagem de capa'
+          name='coverImageUrl'
+          placeholder='Digite a url da imagem'
+          type='text'
+          defaultValue={formState.coverImageUrl}
         />
 
-        <div className="mt-4">
-          <Button type="submit">Enviar</Button>
+        <InputCheckbox
+          labelText='Publicar?'
+          name='published'
+          type='checkbox'
+          defaultChecked={formState.published}
+        />
+
+        <div className='mt-4'>
+          <Button type='submit'>Enviar</Button>
         </div>
       </div>
     </form>
